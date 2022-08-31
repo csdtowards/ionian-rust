@@ -40,6 +40,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut environment = client::EnvironmentBuilder::new()
         .multi_threaded_tokio_runtime()?
         .build()?;
+   
+    println!("test");
 
     let context = environment.core_context();
     let executor = context.executor.clone();
