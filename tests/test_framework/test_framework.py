@@ -171,6 +171,7 @@ class TestFramework:
                     "../../target/release/ionian_node"
                     + (".exe" if is_windows_platform() else ""),
                 ),
+            ),
             type=str,
         )
 
