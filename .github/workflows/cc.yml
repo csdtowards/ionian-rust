@@ -2,7 +2,7 @@ name: code-coverage
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main"]
   pull_request:
     branches: [ "main" ]
 
@@ -10,18 +10,12 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  test:
+  unittest:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
-
-    - name: Install nightly toolchain
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: nightly
-        override: true
 
     - name: Cargo cache
       uses: actions/cache@v3
@@ -34,11 +28,18 @@ jobs:
           target/
         key: ${{ runner.os }}-cargo-nightly-${{ hashFiles('**/Cargo.lock') }}
 
+    - name: Install nightly toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: nightly
+        override: true
+
     - name: Unit test
-      run: cargo +nightly test --all
+      run: cargo +nightly test --all-features --no-fail-fast
       env:
         CARGO_INCREMENTAL: '0'
-        RUSTFLAGS: '-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Zpanic_abort_tests'
+        RUSTFLAGS: '-Zprofile -Ccodegen-units=1 -Copt-level=0 -Cinline-threshold=0 -Clink-dead-code -Coverflow-checks=off -Zpanic_abort_tests'
+        RUSTDOCFLAGS: '-Zprofile -Ccodegen-units=1 -Copt-level=0 -Cinline-threshold=0 -Clink-dead-code -Coverflow-checks=off -Zpanic_abort_tests'
 
     - id: coverage
       uses: actions-rs/grcov@v0.1
