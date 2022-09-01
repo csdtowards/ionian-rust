@@ -40,7 +40,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut environment = client::EnvironmentBuilder::new()
         .multi_threaded_tokio_runtime()?
         .build()?;
-   
     println!("test");
 
     let context = environment.core_context();
@@ -52,6 +51,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     log::configure(&config.log_config_file, executor.clone());
 
     // start services
+    println!("start service");
     executor.clone().spawn(
         async move {
             info!("Starting services...");
